@@ -1,0 +1,123 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&display=swap');
+@import "leaflet/dist/leaflet.css";
+@import "tailwindcss";
+
+@theme {
+  --color-brand-50: #f0faf5;
+  --color-brand-100: #dcf0e5;
+  --color-brand-200: #badac6;
+  --color-brand-300: #8dc0a4;
+  --color-brand-400: #5ea37d;
+  --color-brand-500: #48a274;
+  --color-brand-600: #39825b;
+  --color-brand-700: #2d6648;
+  --color-brand-800: #224e36;
+  --color-brand-900: #1c3e2b;
+  --color-brand-950: #0f2217;
+
+  --color-accent-50: #fefefa;
+  --color-accent-100: #fdfbf2;
+  --color-accent-500: #ffd166;
+  --color-accent-600: #f2b838;
+  --color-accent-700: #d39620;
+
+  --font-sans: 'Poppins', 'Inter', 'sans-serif';
+
+  --shadow-premium: 0 8px 30px rgba(72, 162, 116, 0.04);
+  --shadow-premium-hover: 0 16px 40px rgba(72, 162, 116, 0.08);
+  --shadow-glass: 0 8px 32px 0 rgba(72, 162, 116, 0.04);
+  
+  --animate-pulse-subtle: pulse-subtle 3s infinite ease-in-out;
+
+  @keyframes pulse-subtle {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.02); opacity: 0.95; }
+  }
+}
+
+/* Base styles override */
+body {
+  @apply bg-[#f3f9f5] text-[#2c3e35] font-sans antialiased overflow-x-hidden selection:bg-brand-500 selection:text-white;
+}
+
+/* Glassmorphism system */
+.glass {
+  background: rgba(253, 252, 247, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(72, 162, 116, 0.12);
+}
+
+.glass-dark {
+  background: rgba(33, 47, 39, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Premium Card Hover Effects */
+.card-premium {
+  @apply bg-[#fdfcf7] rounded-3xl border border-[#e4eeeb] shadow-premium transition-all duration-300 hover:shadow-premium-hover hover:-translate-y-0.5;
+}
+
+/* Soft animated custom scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-200 rounded-full hover:bg-slate-300 transition-colors;
+}
+
+/* Custom leaflet tweaks for premium aesthetics */
+.leaflet-container {
+  font-family: inherit;
+  border-radius: 1rem;
+  z-index: 1;
+}
+
+.leaflet-bar {
+  border: none !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
+}
+
+.leaflet-bar a {
+  border-bottom: 1px solid #f1f5f9 !important;
+  color: #475569 !important;
+  transition: all 0.2s;
+}
+
+.leaflet-bar a:hover {
+  background-color: #f8fafc !important;
+  color: #0ea5e9 !important;
+}
+
+/* Dynamic glow effects */
+.glow-brand {
+  box-shadow: 0 0 40px -10px rgba(14, 165, 233, 0.2);
+}
+
+.glow-accent {
+  box-shadow: 0 0 40px -10px rgba(168, 85, 247, 0.2);
+}
+
+/* Transitions */
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.page-enter-from {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
+}
