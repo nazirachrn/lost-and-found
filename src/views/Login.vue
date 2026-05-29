@@ -47,7 +47,7 @@
       </div>
 
       <!-- Mode A: Normal Email Password Login -->
-      <form v-if="!forgotMode" @submit.prevent="handleLogin" class="flex flex-col gap-4">
+      <form v-if="!forgotMode" @submit.prevent="handleLogin" class="flex flex-col gap-4" autocomplete="off">
         <div class="flex flex-col gap-1">
           <label class="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">Alamat Email</label>
           <input 
@@ -55,6 +55,7 @@
             v-model="email" 
             required 
             placeholder="nama@email.com"
+            autocomplete="one-time-code"
             class="text-xs rounded-xl border border-slate-200 px-3 py-2.5 focus:border-brand-500 focus:outline-none bg-white/70"
           />
         </div>
@@ -75,6 +76,7 @@
             v-model="password" 
             required 
             placeholder="••••••••"
+            autocomplete="new-password"
             class="text-xs rounded-xl border border-slate-200 px-3 py-2.5 focus:border-brand-500 focus:outline-none bg-white/70"
           />
         </div>
