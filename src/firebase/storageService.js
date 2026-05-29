@@ -1,11 +1,8 @@
-import { initializeApp, getApps } from "firebase/app";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { firebaseConfig, isDemoMode } from "./config";
+import { isDemoMode } from "./config";
 
-let storage;
-if (!isDemoMode) {
-  storage = getStorage();
-}
+// Cloudinary Configuration
+const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/ecogoals/image/upload";
+const UPLOAD_PRESET = "lostlink_preset";
 
 export const storageService = {
   // Uploads file and returns download URL
@@ -25,10 +22,32 @@ export const storageService = {
         reader.readAsDataURL(file);
       });
     } else {
-      const storageRef = ref(storage, `${path}/${Date.now()}_${file.name}`);
-      const snapshot = await uploadBytes(storageRef, file);
-      const downloadURL = await getDownloadURL(snapshot.ref);
-      return downloadURL;
+      // Use Cloudinary for actual uploads
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", UPLOAD_PRESET);
+      // Optional: you can pass the 'path' as a folder parameter if desired, 
+      // but the preset 'lostlink_assets' folder setting usually overrides it.
+      formData.append("folder", `lostlink_assets/${path}`); 
+
+      try {
+        const response = await fetch(CLOUDINARY_URL, {
+          method: "POST",
+          body: formData
+        });
+
+        if (!response.ok) {
+          const err = await response.json();
+          throw new Error(err.error?.message || "Gagal mengunggah gambar ke Cloudinary");
+        }
+
+        const data = await response.json();
+        // Return the secure URL provided by Cloudinary
+        return data.secure_url;
+      } catch (error) {
+        console.error("Cloudinary Upload Error:", error);
+        throw error;
+      }
     }
   }
 };

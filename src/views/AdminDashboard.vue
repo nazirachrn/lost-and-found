@@ -136,7 +136,7 @@
               <tr v-for="u in allUsers" :key="u.uid" class="hover:bg-slate-50 transition-colors">
                 <td class="px-5 py-3.5">
                   <div class="flex items-center gap-2.5">
-                    <img :src="u.photoURL" class="w-7 h-7 rounded-full border border-slate-100" />
+                    <img :src="getUserAvatar(u)" @error="(e) => e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(u.nama || 'User')}&background=e2e8f0&color=64748b&bold=true&size=128`" class="w-7 h-7 rounded-full border border-slate-100" />
                     <span class="font-bold text-slate-800">{{ u.nama }}</span>
                   </div>
                 </td>
