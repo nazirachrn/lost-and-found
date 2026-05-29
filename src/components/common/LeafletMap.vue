@@ -11,7 +11,6 @@
     
     <!-- Floating Geocoding Search Input -->
     <div 
-      v-if="!readonly" 
       class="absolute top-3 left-3 right-3 sm:left-auto sm:right-3 sm:w-80 z-[1000] flex flex-col gap-1.5"
     >
       <div class="glass flex items-center gap-2 px-3.5 py-2.5 rounded-2xl shadow-lg">
@@ -145,11 +144,11 @@ const selectLocation = (location) => {
   
   if (map) {
     const latlng = [lat, lng];
-    if (activeMarker) {
+    if (!props.readonly && activeMarker) {
       activeMarker.setLatLng(latlng);
+      emit("update:modelValue", { lat, lng });
     }
     map.setView(latlng, 17);
-    emit("update:modelValue", { lat, lng });
   }
   
   searchQuery.value = location.display_name.split(',')[0];

@@ -50,53 +50,6 @@
         </button>
       </div>
 
-      <!-- Claims Management Tab -->
-      <div v-if="activeTab === 'claims'" class="flex flex-col gap-4">
-        <div v-if="claimsStore.loading" class="text-center py-10 text-slate-400 text-xs">Memuat klaim...</div>
-        
-        <div v-else-if="claimsStore.claims.length === 0" class="card-premium p-12 text-center bg-white text-slate-400 text-xs">
-          Belum ada klaim masuk.
-        </div>
-        
-        <div v-else class="flex flex-col gap-3">
-          <div 
-            v-for="claim in claimsStore.claims" :key="claim.id"
-            class="card-premium p-5 bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-4"
-          >
-            <div class="flex flex-col gap-1.5">
-              <div class="flex items-center gap-2 flex-wrap">
-                <span class="text-xs font-extrabold text-slate-800">{{ claim.claimantName }}</span>
-                <span class="text-[10px] text-slate-400">→ klaim barang:</span>
-                <span class="text-xs font-bold text-brand-600">{{ claim.itemName }}</span>
-                <span 
-                  class="text-[9px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full"
-                  :class="{
-                    'bg-amber-100 text-amber-700': claim.status === 'pending',
-                    'bg-emerald-100 text-emerald-700': claim.status === 'verified',
-                    'bg-rose-100 text-rose-700': claim.status === 'rejected',
-                    'bg-slate-100 text-slate-600': claim.status === 'returned',
-                  }"
-                >{{ claim.status }}</span>
-              </div>
-              <p class="text-[11px] text-slate-500 leading-relaxed"><span class="font-semibold">Ciri Khusus:</span> {{ claim.ciriKhusus }}</p>
-              <p class="text-[11px] text-slate-500 leading-relaxed"><span class="font-semibold">Isi Barang:</span> {{ claim.isiBarang }}</p>
-              <p class="text-[11px] text-slate-500 leading-relaxed"><span class="font-semibold">Bukti Tambahan:</span> {{ claim.buktiTambahan }}</p>
-            </div>
-            
-            <!-- Audit Log Status -->
-            <div class="text-[11px] font-bold flex-shrink-0 px-4 py-2 rounded-xl"
-              :class="{
-                'bg-amber-50 text-amber-600 border border-amber-100': claim.status === 'pending',
-                'bg-emerald-50 text-emerald-600 border border-emerald-100': claim.status === 'verified',
-                'bg-rose-50 text-rose-600 border border-rose-100': claim.status === 'rejected',
-                'bg-slate-50 text-slate-600 border border-slate-100': claim.status === 'returned',
-              }"
-            >
-              {{ claim.status === 'pending' ? '🕒 Menunggu Penemu' : claim.status === 'verified' ? '✓ Disetujui Penemu' : claim.status === 'rejected' ? '✗ Ditolak Penemu' : claim.status }}
-            </div>
-          </div>
-        </div>
-      </div>
 
       <!-- All Reports Tab (Missing + Found) -->
       <div v-if="activeTab === 'reports'" class="flex flex-col gap-5">
@@ -203,44 +156,35 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useItemsStore } from '../stores/items';
-import { useClaimsStore } from '../stores/claims';
 import { useNotificationsStore } from '../stores/notifications';
 import { databaseService } from '../firebase/databaseService';
 
 const itemsStore = useItemsStore();
-const claimsStore = useClaimsStore();
-const notifStore = useNotificationsStore();
-
-const activeTab = ref('claims');
+const activeTab = ref('reports');
 const reportSubTab = ref('missing');
 const processingId = ref(null);
 const allUsers = ref([]);
 
 const adminTabs = computed(() => [
-  { key: 'claims', label: 'Klaim Verifikasi', badge: claimsStore.claims.filter(c => c.status === 'pending').length },
   { key: 'reports', label: 'Semua Laporan', badge: 0 },
   { key: 'users', label: 'Pengguna', badge: 0 },
 ]);
 
 let unsubItems = null;
-let unsubClaims = null;
 
 onMounted(() => {
   unsubItems = itemsStore.initializeItems();
-  unsubClaims = claimsStore.initializeClaims('admin');
   // Load users
   allUsers.value = JSON.parse(localStorage.getItem('ll_users') || '[]');
 });
 
 onUnmounted(() => {
   if (unsubItems) unsubItems();
-  if (unsubClaims) unsubClaims();
 });
 
 const adminStats = computed(() => [
   { title: 'Total Barang Hilang', value: itemsStore.missingItems.length, color: '#f43f5e' },
   { title: 'Total Barang Temuan', value: itemsStore.foundItems.length, color: '#0ea5e9' },
-  { title: 'Klaim Pending', value: claimsStore.claims.filter(c => c.status === 'pending').length, color: '#f59e0b' },
   { title: 'Berhasil Dikembalikan', value: [...itemsStore.missingItems, ...itemsStore.foundItems].filter(i => i.status === 'returned').length, color: '#10b981' },
 ]);
 
@@ -262,26 +206,6 @@ const getUserReportCount = (uid) => {
   const missing = itemsStore.missingItems.filter(i => i.userId === uid).length;
   const found = itemsStore.foundItems.filter(i => i.userId === uid).length;
   return missing + found;
-};
-
-const handleApproveClaim = async (claim) => {
-  processingId.value = claim.id;
-  try {
-    await claimsStore.approveClaim(claim, 'demo-admin-id');
-    notifStore.showToast('Klaim berhasil disetujui!', 'success');
-  } finally {
-    processingId.value = null;
-  }
-};
-
-const handleRejectClaim = async (claim) => {
-  processingId.value = claim.id;
-  try {
-    await claimsStore.rejectClaim(claim);
-    notifStore.showToast('Klaim berhasil ditolak.', 'info');
-  } finally {
-    processingId.value = null;
-  }
 };
 
 const adminDeleteItem = async (id, type) => {

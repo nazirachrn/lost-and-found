@@ -8,33 +8,33 @@ export default {
     extend: {
       colors: {
         brand: {
-          50: '#f0faf5',
-          100: '#dcf0e5',
-          200: '#badac6',
-          300: '#8dc0a4',
-          400: '#5ea37d',
-          500: '#48a274', // Primary Sage Green
-          600: '#39825b',
-          700: '#2d6648',
-          800: '#224e36',
-          900: '#1c3e2b',
-          950: '#0f2217',
+          50: '#fdf2f8', // Pastel pink 50
+          100: '#fce7f3',
+          200: '#fbcfe8',
+          300: '#f9a8d4',
+          400: '#f472b6',
+          500: '#ff85a2', // Cute Pastel Pink
+          600: '#db2777',
+          700: '#be185d',
+          800: '#9d174d',
+          900: '#831843',
+          950: '#500724',
         },
         accent: {
-          50: '#fefefa',
-          100: '#fdfbf2',
-          500: '#ffd166', // Turnip Gold
-          600: '#f2b838',
-          700: '#d39620',
+          50: '#f0f9ff',
+          100: '#e0f2fe',
+          500: '#7dd3fc', // Pastel Blue
+          600: '#38bdf8',
+          700: '#0284c7',
         }
       },
       fontFamily: {
-        sans: ['Poppins', 'Inter', 'sans-serif'],
+        sans: ['Quicksand', 'Nunito', 'sans-serif'],
       },
       boxShadow: {
-        'premium': '0 8px 30px rgba(0, 0, 0, 0.03)',
-        'premium-hover': '0 12px 40px rgba(0, 0, 0, 0.06)',
-        'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.04)',
+        'premium': '0 8px 30px rgba(255, 133, 162, 0.1)',
+        'premium-hover': '0 12px 40px rgba(255, 133, 162, 0.2)',
+        'glass': '0 8px 32px 0 rgba(125, 211, 252, 0.15)',
       },
     },
   },
