@@ -12,27 +12,27 @@
           <p class="text-[10px] text-slate-400 font-medium mt-0.5">Chat internal aman tanpa nomor HP</p>
         </div>
 
-        <!-- Admin Contacts -->
-        <div v-if="adminContacts.length > 0" class="p-3 bg-brand-50/50 border-b border-brand-100">
-          <h3 class="text-[10px] font-extrabold text-brand-700 uppercase tracking-widest mb-2 px-2">Hubungi Admin Support</h3>
-          <div class="flex flex-col gap-1">
+        <div class="flex-1 overflow-y-auto divide-y divide-slate-50">
+          <!-- Admin Contacts -->
+          <div v-if="adminContacts.length > 0" class="p-3 bg-brand-50/30">
+            <h3 class="text-[10px] font-extrabold uppercase tracking-wider text-brand-500 mb-2 px-2">Hubungi Admin</h3>
             <div 
               v-for="admin in adminContacts" 
-              :key="admin.uid"
-              @click="contactAdmin(admin)"
-              class="flex items-center gap-3 p-2 rounded-xl cursor-pointer hover:bg-white transition-colors"
-              :class="(activeChat?.receiverId === admin.uid || activeChat?.senderId === admin.uid) && !activeChat?.messages?.length ? 'bg-white shadow-sm ring-1 ring-brand-200' : ''"
+              :key="admin.id"
+              @click="openAdminChat(admin)"
+              class="p-2 flex items-center gap-3 cursor-pointer hover:bg-brand-50 transition-colors rounded-xl"
+              :class="activeChat?.receiverId === admin.id || activeChat?.senderId === admin.id ? 'bg-brand-100 border border-brand-200' : 'border border-transparent'"
             >
-              <img :src="admin.photoURL || `https://api.dicebear.com/7.x/adventurer/svg?seed=${admin.nama}`" class="w-8 h-8 rounded-full border border-brand-100 bg-white" />
-              <div class="flex-1 min-w-0">
-                <h4 class="text-xs font-bold text-slate-800 truncate">{{ admin.nama }}</h4>
-                <p class="text-[9px] font-bold text-brand-500 uppercase tracking-wider">{{ admin.role === 'super_admin' ? 'Super Admin' : 'Admin' }}</p>
+              <img 
+                :src="admin.photoURL || `https://api.dicebear.com/7.x/adventurer/svg?seed=${admin.nama}`" 
+                class="w-8 h-8 rounded-full border border-brand-100 flex-shrink-0" 
+              />
+              <div class="min-w-0 flex-1">
+                <h4 class="text-[11px] font-bold text-slate-800 truncate">{{ admin.nama }}</h4>
+                <p class="text-[9px] text-brand-600 font-semibold">{{ admin.role === 'super_admin' ? 'Super Admin' : 'Admin' }}</p>
               </div>
             </div>
           </div>
-        </div>
-
-        <div class="flex-1 overflow-y-auto divide-y divide-slate-50">
           <!-- Empty state -->
           <div v-if="chatStore.loading" class="p-6 flex flex-col gap-3">
             <div v-for="i in 4" :key="i" class="animate-pulse flex gap-3 items-center">
@@ -161,6 +161,7 @@ import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
 import { useChatStore } from '../stores/chat';
+import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
 
 const route = useRoute();
 const authStore = useAuthStore();
@@ -173,20 +174,33 @@ const sending = ref(false);
 const messagesContainer = ref(null);
 const adminContacts = ref([]);
 
+const fetchAdmins = async () => {
+  try {
+    const db = getFirestore();
+    const q = query(
+      collection(db, "users"),
+      where("role", "in", ["admin", "super_admin"])
+    );
+    
+    const querySnapshot = await getDocs(q);
+    const admins = [];
+    querySnapshot.forEach((doc) => {
+      if (user.value && doc.id !== user.value.uid) {
+        admins.push({ id: doc.id, ...doc.data() });
+      }
+    });
+    
+    adminContacts.value = admins;
+  } catch (error) {
+    console.error("Gagal mengambil kontak admin:", error);
+  }
+};
+
 let unsubChat = null;
-onMounted(async () => {
+onMounted(() => {
   if (user.value) {
     unsubChat = chatStore.initializeChatStream(user.value.uid);
-    
-    // Fetch Admins
-    try {
-      const allUsers = await databaseService.getDocs('users');
-      adminContacts.value = allUsers.filter(u => 
-        (u.role === 'admin' || u.role === 'super_admin') && u.uid !== user.value.uid
-      );
-    } catch (err) {
-      console.error("Gagal memuat daftar admin:", err);
-    }
+    fetchAdmins();
     
     // Auto-open chatId from query param (from ItemDetail)
     if (route.query.chatId) {
@@ -235,22 +249,23 @@ const openChat = (room) => {
   activeChat.value = room;
 };
 
-const contactAdmin = (admin) => {
-  const chatId = [user.value.uid, admin.uid].sort().join('_');
-  const existingRoom = chatStore.activeRooms.find(r => r.chatId === chatId);
+const openAdminChat = (admin) => {
+  const generatedChatId = [user.value.uid, admin.id].sort().join('_');
   
+  const existingRoom = chatStore.activeRooms.find(r => r.chatId === generatedChatId);
   if (existingRoom) {
     activeChat.value = existingRoom;
   } else {
     activeChat.value = {
-      chatId: chatId,
+      chatId: generatedChatId,
       senderId: user.value.uid,
       senderName: user.value.nama,
-      receiverId: admin.uid,
+      receiverId: admin.id,
       messages: [],
-      lastMessage: 'Kirim pesan pertama...',
+      lastMessage: 'Mulai percakapan dengan admin',
       lastMessageTime: new Date().toISOString()
     };
+    partnerProfiles.value[admin.id] = admin;
   }
 };
 

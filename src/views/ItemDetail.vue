@@ -248,51 +248,6 @@ const claimModalOpen = ref(false);
 
 const user = computed(() => authStore.currentUser);
 
-const isAdmin = computed(() => user.value?.role === 'admin' || user.value?.role === 'super_admin');
-const adminStatusInput = ref('');
-const updatingStatus = ref(false);
-
-watch(item, (newVal) => {
-  if (newVal) {
-    adminStatusInput.value = newVal.status;
-  }
-});
-
-const updateItemStatus = async () => {
-  if (!confirm(`Ubah status barang menjadi ${adminStatusInput.value}?`)) {
-    adminStatusInput.value = item.value.status; // Revert
-    return;
-  }
-  
-  updatingStatus.value = true;
-  try {
-    const col = type.value === 'missing' ? 'missing_items' : 'found_items';
-    await databaseService.updateDoc(col, itemId.value, { status: adminStatusInput.value });
-    
-    item.value.status = adminStatusInput.value;
-    notifStore.showToast('Status berhasil diubah', 'success');
-
-    // Email Trigger
-    if (adminStatusInput.value === 'found' || adminStatusInput.value === 'returned') {
-      if (reporterProfile.value?.email) {
-        await databaseService.addDoc('mail', {
-          to: reporterProfile.value.email,
-          message: {
-            subject: `Pembaruan Status Barang: ${item.value.name}`,
-            text: `Status barang "${item.value.name}" Anda telah diubah menjadi: ${adminStatusInput.value.toUpperCase()}.`,
-            html: `<h3>Halo ${reporterProfile.value.nama},</h3><p>Status pelaporan barang Anda <b>${item.value.name}</b> telah diperbarui oleh Admin menjadi: <span style="color:#0ea5e9;font-weight:bold;">${adminStatusInput.value.toUpperCase()}</span>.</p><p>Silakan buka aplikasi LostLink untuk melihat detail lebih lanjut.</p>`
-          }
-        });
-      }
-    }
-  } catch (err) {
-    notifStore.showToast('Gagal mengubah status', 'error');
-    adminStatusInput.value = item.value.status; // Revert
-  } finally {
-    updatingStatus.value = false;
-  }
-};
-
 let unsubItems = null;
 const reporterProfile = ref(null);
 

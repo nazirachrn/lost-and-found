@@ -1,9 +1,9 @@
 <template>
   <div 
     v-if="isOpen" 
-    class="fixed inset-0 z-[9999] overflow-y-auto bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4"
+    class="fixed inset-0 z-[9999] overflow-y-auto bg-slate-950/40 backdrop-blur-xs flex items-center justify-center p-4"
   >
-    <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl border border-slate-100 overflow-hidden transform transition-all duration-300">
+    <div class="bg-white w-full max-w-lg rounded-2xl shadow-xl border border-slate-100 overflow-hidden transform transition-all duration-300">
       <!-- Header -->
       <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
         <div>

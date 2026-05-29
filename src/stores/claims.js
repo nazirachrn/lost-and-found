@@ -82,6 +82,35 @@ export const useClaimsStore = defineStore("claims", () => {
         });
       }
 
+      // 5. Send Notification Email via Trigger Email
+      try {
+        const claimantDoc = await databaseService.getDoc("users", claim.claimantId);
+        if (claimantDoc && claimantDoc.email) {
+          const escapeHtml = (unsafe) => {
+            return (unsafe || '').toString()
+              .replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
+          };
+          
+          await databaseService.addDoc("mail", {
+            to: claimantDoc.email,
+            message: {
+              subject: "Kabar Baik! Klaim Anda Telah Disetujui! 🎉",
+              html: "<h3>Halo " + escapeHtml(claim.claimantName) + "!</h3>" +
+                "<p>Klaim Anda untuk barang <b>" + escapeHtml(claim.itemName) + "</b> telah disetujui oleh Penemu.</p>" +
+                "<p>Silakan login ke aplikasi LostLink untuk memeriksa status dan segera hubungi penemu via chat internal kami untuk koordinasi serah terima barang.</p>" +
+                "<br>" +
+                "<p>Salam hangat,<br>Tim LostLink</p>"
+            }
+          });
+        }
+      } catch (e) {
+        console.error("Gagal menjadwalkan email notifikasi:", e);
+      }
+
       notifStore.showToast("Klaim berhasil Anda setujui!", "success");
     } catch (err) {
       error.value = err.message;

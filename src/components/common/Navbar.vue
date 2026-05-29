@@ -89,7 +89,7 @@
               <!-- Notifications Floating Panel -->
               <div 
                 v-if="showNotifPanel" 
-                class="absolute right-0 mt-2 w-80 sm:w-96 bg-white border border-slate-100 rounded-2xl shadow-xl z-50 overflow-hidden"
+                class="absolute right-0 mt-2 w-80 sm:w-96 bg-white border border-slate-100 rounded-2xl shadow-xl z-[9999] overflow-hidden"
               >
                 <div class="p-4 border-b border-slate-50 flex justify-between items-center bg-slate-50/50">
                   <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-800">Notifikasi Terbaru</h3>
@@ -184,7 +184,7 @@
 
               <div 
                 v-if="showProfilePanel"
-                class="absolute right-0 mt-2 w-52 bg-white border border-slate-100 rounded-2xl shadow-xl z-50 overflow-hidden"
+                class="absolute right-0 mt-2 w-52 bg-white border border-slate-100 rounded-2xl shadow-xl z-[9999] overflow-hidden"
               >
                 <!-- User Summary -->
                 <div class="p-4 border-b border-slate-50 bg-slate-50/50">

@@ -146,7 +146,7 @@
     </div>
 
     <!-- Confirm Delete Modal -->
-    <div v-if="deleteConfirm.show" class="fixed inset-0 z-50 bg-slate-950/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <div v-if="deleteConfirm.show" class="fixed inset-0 z-[9999] bg-slate-950/40 backdrop-blur-xs flex items-center justify-center p-4">
       <div class="bg-white w-full max-w-sm rounded-2xl shadow-xl p-6 flex flex-col gap-4 border border-slate-100">
         <div class="flex items-center gap-3">
           <div class="w-10 h-10 rounded-xl bg-rose-50 flex items-center justify-center text-rose-500 flex-shrink-0">
@@ -165,7 +165,7 @@
     </div>
 
     <!-- Edit Profile Modal -->
-    <div v-if="editProfile.show" class="fixed inset-0 z-50 bg-slate-950/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <div v-if="editProfile.show" class="fixed inset-0 z-[9999] bg-slate-950/40 backdrop-blur-xs flex items-center justify-center p-4">
       <div class="bg-white w-full max-w-sm rounded-2xl shadow-xl p-6 flex flex-col gap-5 border border-slate-100">
         <div class="flex items-center justify-between border-b border-slate-50 pb-3">
           <h3 class="text-sm font-extrabold text-slate-800 uppercase tracking-wider">Edit Profil</h3>

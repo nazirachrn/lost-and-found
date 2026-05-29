@@ -115,11 +115,13 @@ export const authService = {
       const userProfile = {
         uid: user.uid,
         nama: name,
+        nama_pengguna: name.toLowerCase().replace(/\s+/g, ''),
         displayName: name,
         email: email,
         photoURL: `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(name)}`,
         role: "user",
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
+        dibuat_pada: serverTimestamp()
       };
       
       await setDoc(doc(db, "users", user.uid), userProfile);
