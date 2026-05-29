@@ -12,6 +12,26 @@
           <p class="text-[10px] text-slate-400 font-medium mt-0.5">Chat internal aman tanpa nomor HP</p>
         </div>
 
+        <!-- Admin Contacts -->
+        <div v-if="adminContacts.length > 0" class="p-3 bg-brand-50/50 border-b border-brand-100">
+          <h3 class="text-[10px] font-extrabold text-brand-700 uppercase tracking-widest mb-2 px-2">Hubungi Admin Support</h3>
+          <div class="flex flex-col gap-1">
+            <div 
+              v-for="admin in adminContacts" 
+              :key="admin.uid"
+              @click="contactAdmin(admin)"
+              class="flex items-center gap-3 p-2 rounded-xl cursor-pointer hover:bg-white transition-colors"
+              :class="(activeChat?.receiverId === admin.uid || activeChat?.senderId === admin.uid) && !activeChat?.messages?.length ? 'bg-white shadow-sm ring-1 ring-brand-200' : ''"
+            >
+              <img :src="admin.photoURL || `https://api.dicebear.com/7.x/adventurer/svg?seed=${admin.nama}`" class="w-8 h-8 rounded-full border border-brand-100 bg-white" />
+              <div class="flex-1 min-w-0">
+                <h4 class="text-xs font-bold text-slate-800 truncate">{{ admin.nama }}</h4>
+                <p class="text-[9px] font-bold text-brand-500 uppercase tracking-wider">{{ admin.role === 'super_admin' ? 'Super Admin' : 'Admin' }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="flex-1 overflow-y-auto divide-y divide-slate-50">
           <!-- Empty state -->
           <div v-if="chatStore.loading" class="p-6 flex flex-col gap-3">
@@ -151,11 +171,22 @@ const activeChat = ref(null);
 const messageInput = ref('');
 const sending = ref(false);
 const messagesContainer = ref(null);
+const adminContacts = ref([]);
 
 let unsubChat = null;
-onMounted(() => {
+onMounted(async () => {
   if (user.value) {
     unsubChat = chatStore.initializeChatStream(user.value.uid);
+    
+    // Fetch Admins
+    try {
+      const allUsers = await databaseService.getDocs('users');
+      adminContacts.value = allUsers.filter(u => 
+        (u.role === 'admin' || u.role === 'super_admin') && u.uid !== user.value.uid
+      );
+    } catch (err) {
+      console.error("Gagal memuat daftar admin:", err);
+    }
     
     // Auto-open chatId from query param (from ItemDetail)
     if (route.query.chatId) {
@@ -202,6 +233,25 @@ watch(activeChatMessages, () => {
 
 const openChat = (room) => {
   activeChat.value = room;
+};
+
+const contactAdmin = (admin) => {
+  const chatId = [user.value.uid, admin.uid].sort().join('_');
+  const existingRoom = chatStore.activeRooms.find(r => r.chatId === chatId);
+  
+  if (existingRoom) {
+    activeChat.value = existingRoom;
+  } else {
+    activeChat.value = {
+      chatId: chatId,
+      senderId: user.value.uid,
+      senderName: user.value.nama,
+      receiverId: admin.uid,
+      messages: [],
+      lastMessage: 'Kirim pesan pertama...',
+      lastMessageTime: new Date().toISOString()
+    };
+  }
 };
 
 const sendMsg = async () => {

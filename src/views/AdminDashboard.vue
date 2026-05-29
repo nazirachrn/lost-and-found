@@ -176,10 +176,17 @@ const adminTabs = computed(() => [
 
 let unsubItems = null;
 
-onMounted(() => {
+onMounted(async () => {
   unsubItems = itemsStore.initializeItems();
   // Load users
-  allUsers.value = JSON.parse(localStorage.getItem('ll_users') || '[]');
+  try {
+    const firestoreUsers = await databaseService.getDocs('users');
+    allUsers.value = firestoreUsers;
+  } catch (err) {
+    console.error("Gagal memuat pengguna dari Firestore:", err);
+    // Fallback if failed
+    allUsers.value = JSON.parse(localStorage.getItem('ll_users') || '[]');
+  }
 });
 
 onUnmounted(() => {
@@ -221,11 +228,14 @@ const adminDeleteItem = async (id, type) => {
   }
 };
 
-const blockUser = (uid) => {
-  const users = JSON.parse(localStorage.getItem('ll_users') || '[]');
-  const updated = users.filter(u => u.uid !== uid);
-  localStorage.setItem('ll_users', JSON.stringify(updated));
-  allUsers.value = updated;
-  notifStore.showToast('Pengguna berhasil diblokir dari sistem.', 'info');
+const deleteUser = async (uid) => {
+  if (!confirm('Hapus pengguna ini?')) return;
+  try {
+    await databaseService.deleteDoc('users', uid);
+    allUsers.value = allUsers.value.filter(u => u.uid !== uid);
+    notifStore.showToast('Pengguna berhasil dihapus', 'success');
+  } catch (err) {
+    notifStore.showToast('Gagal menghapus pengguna: ' + err.message, 'error');
+  }
 };
 </script>
