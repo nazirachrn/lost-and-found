@@ -179,13 +179,15 @@ const HARDCODED_ADMINS = [
     id: "admin-nazira",
     nama: "Nazira Chairani Fauza",
     role: "super_admin",
-    email: "nazira.lostlink@dev.ac.id"
+    email: "nazira.lostlink@dev.ac.id",
+    photoURL: "https://ui-avatars.com/api/?name=Nazira+Chairani+Fauza&background=f9a8d4&color=be185d&bold=true&size=128"
   },
   {
     id: "admin-damai",
     nama: "Damai Puti Afifah",
     role: "super_admin",
-    email: "damai.lostlink@dev.ac.id"
+    email: "damai.lostlink@dev.ac.id",
+    photoURL: "https://ui-avatars.com/api/?name=Damai+Puti+Afifah&background=f9a8d4&color=be185d&bold=true&size=128"
   }
 ];
 
