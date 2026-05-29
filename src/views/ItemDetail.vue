@@ -263,7 +263,7 @@ onMounted(async () => {
       try {
         reporterProfile.value = await databaseService.getDoc('users', docData.userId);
       } catch (err) {
-        reporterProfile.value = { nama: 'Pengguna LostLink', photoURL: `https://api.dicebear.com/7.x/adventurer/svg?seed=user` };
+        reporterProfile.value = { nama: 'Pengguna LostLink', photoURL: `https://ui-avatars.com/api/?name=Pengguna+LostLink&background=e2e8f0&color=64748b&bold=true&size=128` };
       }
     }
   } catch (e) {
@@ -299,7 +299,7 @@ const reporterName = computed(() => {
 });
 
 const reporterAvatar = computed(() => {
-  return reporterProfile.value?.photoURL || `https://api.dicebear.com/7.x/adventurer/svg?seed=user`;
+  return reporterProfile.value?.photoURL || `https://ui-avatars.com/api/?name=Pengguna+LostLink&background=e2e8f0&color=64748b&bold=true&size=128`;
 });
 
 const statusLabel = computed(() => {

@@ -9,7 +9,7 @@
         <!-- Avatar -->
         <div class="relative flex-shrink-0">
           <img 
-            :src="user?.photoURL || 'https://api.dicebear.com/7.x/adventurer/svg?seed=default'" 
+            :src="user?.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.nama || 'User')}&background=f9a8d4&color=be185d&bold=true&size=128`" 
             alt="Avatar"
             class="w-28 h-28 rounded-2xl border-4 border-white shadow-lg object-cover bg-white"
           />
@@ -292,7 +292,7 @@ const saveProfile = async () => {
   try {
     const newName = editProfile.value.nama.trim();
     // Auto update avatar based on new name
-    const newPhotoURL = `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(newName)}`;
+    const newPhotoURL = `https://ui-avatars.com/api/?name=${encodeURIComponent(newName)}&background=f9a8d4&color=be185d&bold=true&size=128`;
     
     // Update firestore document
     await databaseService.updateDoc("users", user.value.uid, {

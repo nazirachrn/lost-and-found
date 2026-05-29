@@ -24,7 +24,7 @@
               :class="activeChat?.receiverId === admin.id || activeChat?.senderId === admin.id ? 'bg-brand-100 border border-brand-200' : 'border border-transparent'"
             >
               <img 
-                :src="admin.photoURL || `https://api.dicebear.com/7.x/adventurer/svg?seed=${admin.nama}`" 
+                :src="admin.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(admin.nama)}&background=f9a8d4&color=be185d&bold=true&size=128`" 
                 class="w-8 h-8 rounded-full border border-brand-100 flex-shrink-0" 
               />
               <div class="min-w-0 flex-1">
@@ -337,11 +337,11 @@ const loadPartnerProfile = async (partnerId) => {
     if (userDoc) {
       partnerProfiles.value[partnerId] = userDoc;
     } else {
-      partnerProfiles.value[partnerId] = { nama: 'Pengguna LostLink', photoURL: `https://api.dicebear.com/7.x/adventurer/svg?seed=user` };
+      partnerProfiles.value[partnerId] = { nama: 'Pengguna LostLink', photoURL: `https://ui-avatars.com/api/?name=Pengguna+LostLink&background=e2e8f0&color=64748b&bold=true&size=128` };
     }
   } catch (error) {
     // If not found in firestore, fallback to default
-    partnerProfiles.value[partnerId] = { nama: 'Pengguna LostLink', photoURL: `https://api.dicebear.com/7.x/adventurer/svg?seed=user` };
+    partnerProfiles.value[partnerId] = { nama: 'Pengguna LostLink', photoURL: `https://ui-avatars.com/api/?name=Pengguna+LostLink&background=e2e8f0&color=64748b&bold=true&size=128` };
   }
 };
 
@@ -373,7 +373,7 @@ const getPartnerAvatar = (room) => {
   if (!room || !user.value) return '';
   const partnerId = room.senderId === user.value.uid ? room.receiverId : room.senderId;
   const profile = partnerProfiles.value[partnerId];
-  return (profile && profile !== 'loading') ? profile.photoURL : `https://api.dicebear.com/7.x/adventurer/svg?seed=user`;
+  return (profile && profile !== 'loading') ? profile.photoURL : `https://ui-avatars.com/api/?name=Pengguna+LostLink&background=e2e8f0&color=64748b&bold=true&size=128`;
 };
 
 const formatTime = (dateStr) => {
@@ -383,3 +383,4 @@ const formatTime = (dateStr) => {
   return d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
 };
 </script>
+

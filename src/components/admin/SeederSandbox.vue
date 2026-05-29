@@ -196,7 +196,7 @@ const seedAdminRole = async () => {
         email: admin.email,
         role: admin.role,
         createdAt: new Date().toISOString(),
-        photoURL: `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(admin.nama_lengkap)}`
+        photoURL: `https://ui-avatars.com/api/?name=${encodeURIComponent(admin.nama_lengkap)}&background=f9a8d4&color=be185d&bold=true&size=128`
       });
       
       successCount++;
