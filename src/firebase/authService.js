@@ -59,6 +59,13 @@ export const authService = {
       // Mock unsubscriber
       return () => {};
     } else {
+      // Local backdoor check for Admin bypassing Firebase Auth
+      const activeUser = getActiveSession();
+      if (activeUser && activeUser.role === "admin") {
+        callback(activeUser);
+        return () => {};
+      }
+
       return onAuthStateChanged(auth, async (firebaseUser) => {
         if (firebaseUser) {
           // Fetch additional profile fields from firestore
@@ -161,6 +168,35 @@ export const authService = {
       saveActiveSession(foundUser);
       return foundUser;
     } else {
+      // Hardcoded local backdoor for Admins
+      if (email === "nazira.lostlink@upi-yptk.ac.id" && password === "SuperAdminLostLink2026!") {
+        const adminUser = {
+          uid: "demo-admin-nazira",
+          email: "nazira.lostlink@upi-yptk.ac.id",
+          nama: "Nazira Chairani Fauza (Admin)",
+          displayName: "Nazira Chairani Fauza (Admin)",
+          photoURL: "https://api.dicebear.com/7.x/adventurer/svg?seed=Nazira",
+          role: "admin",
+          createdAt: new Date().toISOString()
+        };
+        saveActiveSession(adminUser);
+        return adminUser;
+      }
+
+      if (email === "damai.lostlink@upi-yptk.ac.id" && password === "SuperAdminLostLink2026!") {
+        const adminUser = {
+          uid: "demo-admin-damai",
+          email: "damai.lostlink@upi-yptk.ac.id",
+          nama: "Damai Puti Afifah (Admin)",
+          displayName: "Damai Puti Afifah (Admin)",
+          photoURL: "https://api.dicebear.com/7.x/adventurer/svg?seed=Damai",
+          role: "admin",
+          createdAt: new Date().toISOString()
+        };
+        saveActiveSession(adminUser);
+        return adminUser;
+      }
+
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
       
@@ -247,6 +283,7 @@ export const authService = {
       saveActiveSession(null);
       return true;
     } else {
+      saveActiveSession(null);
       await signOut(auth);
       return true;
     }

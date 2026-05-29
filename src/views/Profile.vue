@@ -1,29 +1,34 @@
 <template>
   <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-8">
     <!-- Profile Header Card -->
-    <div class="card-premium p-8 bg-white relative overflow-hidden">
+    <div class="card-premium bg-white relative overflow-hidden">
       <!-- Background gradient decoration -->
-      <div class="absolute top-0 left-0 right-0 h-28 bg-gradient-to-r from-brand-500 to-accent-500 opacity-90"></div>
+      <div class="h-32 bg-gradient-to-r from-brand-500 to-accent-500 opacity-90 w-full"></div>
       
-      <div class="relative z-10 flex flex-col sm:flex-row items-start sm:items-end gap-5 mt-10">
+      <div class="px-8 pb-8 relative z-10 flex flex-col sm:flex-row items-center sm:items-start gap-6 -mt-12">
         <!-- Avatar -->
-        <div class="relative">
+        <div class="relative flex-shrink-0">
           <img 
             :src="user?.photoURL || 'https://api.dicebear.com/7.x/adventurer/svg?seed=default'" 
             alt="Avatar"
-            class="w-24 h-24 rounded-2xl border-4 border-white shadow-lg object-cover"
+            class="w-28 h-28 rounded-2xl border-4 border-white shadow-lg object-cover bg-white"
           />
           <span 
-            class="absolute -bottom-1 -right-1 text-[9px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full text-white"
-            :class="user?.role === 'admin' ? 'bg-purple-500' : 'bg-brand-500'"
+            class="absolute -bottom-2 -right-2 text-[10px] font-extrabold uppercase tracking-widest px-3 py-1 rounded-full text-white shadow-sm"
+            :class="['admin', 'super_admin'].includes(user?.role) ? 'bg-purple-500' : 'bg-brand-500'"
           >
-            {{ user?.role === 'admin' ? 'Admin' : 'User' }}
+            {{ user?.role === 'super_admin' ? 'Super Admin' : user?.role === 'admin' ? 'Admin' : 'User' }}
           </span>
         </div>
 
-        <div class="pb-1">
-          <h1 class="text-2xl font-black text-white tracking-tight">{{ user?.nama }}</h1>
-          <p class="text-brand-100 text-xs font-medium mt-0.5">{{ user?.email }}</p>
+        <div class="flex flex-col items-center sm:items-start sm:mt-14 w-full text-center sm:text-left">
+          <h1 class="text-2xl font-black text-slate-800 tracking-tight">{{ user?.nama }}</h1>
+          <p class="text-slate-500 text-xs font-semibold mt-1">{{ user?.email }}</p>
+          <div class="mt-4 px-4 py-2 bg-slate-50 rounded-xl border border-slate-200">
+            <span class="text-[10px] font-extrabold text-slate-600 uppercase tracking-widest">
+              {{ user?.role === 'super_admin' ? 'Hak Akses: Super Administrator' : user?.role === 'admin' ? 'Hak Akses: Administrator' : 'Hak Akses: Pengguna Standar' }}
+            </span>
+          </div>
         </div>
       </div>
     </div>

@@ -1,28 +1,39 @@
+import { initializeApp, getApps } from "firebase/app";
+import { getAnalytics, isSupported } from "firebase/analytics";
+
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "",
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "",
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "",
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "",
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "",
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || ""
+  apiKey: "AIzaSyAUlC00m9xDoqqKhvePk2ffQ-GJA2xjJos",
+  authDomain: "lostlink-35a35.firebaseapp.com",
+  projectId: "lostlink-35a35",
+  storageBucket: "lostlink-35a35.firebasestorage.app",
+  messagingSenderId: "912217821587",
+  appId: "1:912217821587:web:da7a5ef68b7038e5ffd866",
+  measurementId: "G-S96SEJXRCK"
 };
 
-// Evaluate if config variables are filled with real credentials
-const isDemoMode = !firebaseConfig.apiKey || 
-                   firebaseConfig.apiKey === "" || 
-                   firebaseConfig.apiKey.startsWith("YOUR_");
+// Force demo mode to false since we are using real credentials
+const isDemoMode = false;
 
-if (isDemoMode) {
-  console.log(
-    "%c[LostLink Engine] Initializing in high-fidelity Stateful Demo Mode.\nAll systems (Auth, Firestore, Storage, Chat, Matching) are fully active using reactive LocalStorage simulation.",
-    "color: #0ea5e9; font-weight: bold; background: #f0f9ff; padding: 6px 12px; border-radius: 4px; border: 1px solid #bae6fd;"
-  );
+console.log(
+  "%c[LostLink Engine] Connecting to Cloud Firebase backend.",
+  "color: #10b981; font-weight: bold; background: #f0fdf4; padding: 6px 12px; border-radius: 4px; border: 1px solid #bbf7d0;"
+);
+
+// Initialize Firebase App globally
+let app;
+if (getApps().length === 0) {
+  app = initializeApp(firebaseConfig);
 } else {
-  console.log(
-    "%c[LostLink Engine] Connecting to Cloud Firebase backend.",
-    "color: #10b981; font-weight: bold; background: #f0fdf4; padding: 6px 12px; border-radius: 4px; border: 1px solid #bbf7d0;"
-  );
+  app = getApps()[0];
 }
 
-export { firebaseConfig, isDemoMode };
+// Initialize Analytics (only if supported by browser environment)
+let analytics = null;
+isSupported().then((supported) => {
+  if (supported) {
+    analytics = getAnalytics(app);
+  }
+});
+
+export { firebaseConfig, isDemoMode, app, analytics };
 export default firebaseConfig;

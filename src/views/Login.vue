@@ -167,8 +167,8 @@ const router = useRouter();
 
 const isDemo = computed(() => isDemoMode);
 
-const email = ref("");
-const password = ref("");
+const email = ref("nazira.lostlink@upi-yptk.ac.id");
+const password = ref("SuperAdminLostLink2026!");
 const loading = ref(false);
 const error = ref(null);
 const forgotMode = ref(false);

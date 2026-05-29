@@ -139,7 +139,7 @@ router.beforeEach(async (to, from) => {
 
   // Rule 3: Admin Only
   if (to.matched.some(record => record.meta.requiresAdmin)) {
-    if (!user || user.role !== "admin") {
+    if (!user || !['admin', 'super_admin'].includes(user.role)) {
       authStore.logout(); // Fail-safe
       return { name: "Login" };
     }

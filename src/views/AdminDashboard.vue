@@ -12,6 +12,9 @@
       </div>
     </div>
 
+    <!-- Seed Database Utility (Demo/Dev only) -->
+    <SeederSandbox />
+
     <!-- Admin Stats Cards -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-5">
       <div 
@@ -158,6 +161,7 @@ import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useItemsStore } from '../stores/items';
 import { useNotificationsStore } from '../stores/notifications';
 import { databaseService } from '../firebase/databaseService';
+import SeederSandbox from '../components/admin/SeederSandbox.vue';
 
 const itemsStore = useItemsStore();
 const activeTab = ref('reports');

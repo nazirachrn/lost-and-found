@@ -30,7 +30,7 @@
 
           <!-- Admin Panel Button -->
           <RouterLink 
-            v-if="user.role === 'admin'"
+            v-if="['admin', 'super_admin'].includes(user.role)"
             to="/admin" 
             class="px-3.5 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all duration-200"
             :class="$route.path.startsWith('/admin') 
@@ -191,7 +191,7 @@
                   <h4 class="text-xs font-bold text-slate-800 truncate leading-snug">{{ user.nama }}</h4>
                   <p class="text-[10px] text-slate-400 truncate mt-0.5 leading-snug">{{ user.email }}</p>
                   <span class="inline-block text-[9px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded bg-brand-50 text-brand-600 mt-2">
-                    {{ user.role === 'admin' ? 'Administrator' : 'User' }}
+                    {{ ['admin', 'super_admin'].includes(user.role) ? 'Administrator' : 'User' }}
                   </span>
                 </div>
 
@@ -246,7 +246,7 @@
 
         <!-- Admin Gateway mobile -->
         <RouterLink 
-          v-if="user.role === 'admin'"
+          v-if="['admin', 'super_admin'].includes(user.role)"
           to="/admin" 
           @click="mobileMenuOpen = false"
           class="px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider text-slate-600 hover:bg-purple-50 text-purple-600"

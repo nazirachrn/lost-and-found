@@ -229,20 +229,57 @@ const sendMsg = async () => {
   }
 };
 
+import { databaseService } from '../firebase/databaseService';
+
+const partnerProfiles = ref({});
+
+const loadPartnerProfile = async (partnerId) => {
+  if (!partnerId || partnerProfiles.value[partnerId] || partnerProfiles.value[partnerId] === 'loading') return;
+  
+  partnerProfiles.value[partnerId] = 'loading'; // prevent duplicate fetches
+  
+  try {
+    const userDoc = await databaseService.getDoc('users', partnerId);
+    if (userDoc) {
+      partnerProfiles.value[partnerId] = userDoc;
+    } else {
+      partnerProfiles.value[partnerId] = { nama: 'Pengguna LostLink', photoURL: `https://api.dicebear.com/7.x/adventurer/svg?seed=user` };
+    }
+  } catch (error) {
+    // If not found in firestore, fallback to default
+    partnerProfiles.value[partnerId] = { nama: 'Pengguna LostLink', photoURL: `https://api.dicebear.com/7.x/adventurer/svg?seed=user` };
+  }
+};
+
+// Prefetch partner profiles when rooms are loaded
+watch(() => chatStore.activeRooms, (newRooms) => {
+  if (user.value) {
+    newRooms.forEach(room => {
+      const partnerId = room.senderId === user.value.uid ? room.receiverId : room.senderId;
+      loadPartnerProfile(partnerId);
+    });
+  }
+}, { immediate: true });
+
+// Prefetch for query param mock room
+watch(() => route.query.with, (newPartnerId) => {
+  if (newPartnerId) {
+    loadPartnerProfile(newPartnerId);
+  }
+}, { immediate: true });
+
 const getPartnerName = (room) => {
   if (!room || !user.value) return 'Pengguna';
-  const users = JSON.parse(localStorage.getItem('ll_users') || '[]');
   const partnerId = room.senderId === user.value.uid ? room.receiverId : room.senderId;
-  const partner = users.find(u => u.uid === partnerId);
-  return partner ? partner.nama : 'Pengguna LostLink';
+  const profile = partnerProfiles.value[partnerId];
+  return (profile && profile !== 'loading') ? profile.nama : (profile === 'loading' ? 'Memuat...' : 'Pengguna LostLink');
 };
 
 const getPartnerAvatar = (room) => {
   if (!room || !user.value) return '';
-  const users = JSON.parse(localStorage.getItem('ll_users') || '[]');
   const partnerId = room.senderId === user.value.uid ? room.receiverId : room.senderId;
-  const partner = users.find(u => u.uid === partnerId);
-  return partner ? partner.photoURL : `https://api.dicebear.com/7.x/adventurer/svg?seed=user`;
+  const profile = partnerProfiles.value[partnerId];
+  return (profile && profile !== 'loading') ? profile.photoURL : `https://api.dicebear.com/7.x/adventurer/svg?seed=user`;
 };
 
 const formatTime = (dateStr) => {
