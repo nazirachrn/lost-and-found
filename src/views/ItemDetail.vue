@@ -1,5 +1,6 @@
 <template>
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-8" v-if="!loading && item">
+  <div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-8" v-if="!loading && item">
     <!-- Back nav -->
     <RouterLink 
       :to="type === 'missing' ? '/missing' : '/found'" 
@@ -214,6 +215,7 @@
   <div v-else class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
     <h2 class="text-xl font-bold text-slate-500">Barang tidak ditemukan.</h2>
     <RouterLink to="/dashboard" class="text-brand-500 font-bold text-sm hover:underline mt-3 inline-block">&larr; Kembali ke Dashboard</RouterLink>
+  </div>
   </div>
 </template>
 

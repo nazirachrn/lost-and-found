@@ -218,7 +218,7 @@
           v-for="item in recentItems" 
           :key="item.id" 
           :item="item" 
-          :type="item.status === 'missing' ? 'missing' : 'found'"
+          :type="item.__type"
         />
       </div>
     </div>
@@ -375,8 +375,8 @@ const ownMatches = computed(() => {
 // Compute 4 recent items
 const recentItems = computed(() => {
   const all = [
-    ...itemsStore.missingItems.slice(0, 8),
-    ...itemsStore.foundItems.slice(0, 8)
+    ...itemsStore.missingItems.slice(0, 8).map(i => ({ ...i, __type: 'missing' })),
+    ...itemsStore.foundItems.slice(0, 8).map(i => ({ ...i, __type: 'found' }))
   ];
   return all.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 4);
 });

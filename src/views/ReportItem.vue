@@ -67,6 +67,15 @@
               <option value="" disabled>Pilih Lokasi</option>
               <option v-for="loc in locations" :key="loc" :value="loc">{{ loc }}</option>
             </select>
+            <!-- Conditional Input Custom Lokasi -->
+            <input 
+              v-if="form.lokasi === 'Lainnya...'"
+              type="text"
+              v-model="customLokasi"
+              required
+              placeholder="Sebutkan nama lokasi/tempat spesifik Anda..."
+              class="text-xs rounded-xl border border-slate-200 px-3 py-2.5 mt-2 focus:border-brand-500 focus:outline-none"
+            />
           </div>
         </div>
 
@@ -172,15 +181,46 @@
         </div>
 
         <!-- Map Component -->
-        <LeafletMap 
-          v-model="mapCoords" 
-          :readonly="false" 
-          height="390px" 
-        />
+        <div class="relative rounded-2xl transition-all" :class="{ 'pointer-events-none opacity-85': isMapLocked }">
+          <LeafletMap 
+            v-model="mapCoords" 
+            :readonly="false" 
+            height="390px" 
+          />
+        </div>
 
         <div class="flex bg-slate-100 rounded-xl p-3 justify-between items-center text-[10px] text-slate-500">
           <span>Lat: <strong>{{ mapCoords.lat.toFixed(6) }}</strong></span>
           <span>Lng: <strong>{{ mapCoords.lng.toFixed(6) }}</strong></span>
+        </div>
+
+        <!-- Lock Map Action Buttons -->
+        <div class="flex items-center gap-2 mt-1">
+          <button 
+            type="button"
+            v-if="!isMapLocked"
+            @click="isMapLocked = true"
+            class="flex-1 bg-sky-500 hover:bg-sky-600 text-white text-xs font-bold py-3 rounded-xl shadow-md transition-all active:scale-95"
+          >
+            Konfirmasi Koordinat Lokasi
+          </button>
+          <button 
+            type="button"
+            v-else
+            @click="isMapLocked = false"
+            class="flex-1 bg-emerald-500 text-white text-xs font-bold py-3 rounded-xl shadow-md cursor-default flex justify-center items-center gap-2"
+          >
+            Lokasi Berhasil Dikunci <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+          </button>
+          
+          <button 
+            type="button"
+            v-if="isMapLocked"
+            @click="isMapLocked = false"
+            class="px-4 py-3 text-[10px] font-bold text-slate-500 hover:text-brand-600 hover:bg-brand-50 rounded-xl transition-all border border-transparent hover:border-brand-200 flex-shrink-0"
+          >
+            Ubah Lokasi
+          </button>
         </div>
       </div>
     </div>
@@ -209,6 +249,9 @@ const selectedFile = ref(null);
 const selectedFileName = ref("");
 const fileInput = ref(null);
 
+const customLokasi = ref("");
+const isMapLocked = ref(false);
+
 // Center point of university Campus
 const mapCoords = ref({ lat: -6.2088, lng: 106.8456 });
 
@@ -225,7 +268,7 @@ const form = ref({
 });
 
 const categories = ["HP", "Laptop", "Dompet", "Tas", "Kunci", "Kartu Identitas", "Aksesoris", "Lainnya"];
-const locations = ["Kampus Utama", "Cafe Kopi", "Perpustakaan Pusat", "Parkiran Utara", "Aula Seminar"];
+const locations = ["Kampus Utama", "Cafe Kopi", "Perpustakaan Pusat", "Parkiran Utara", "Aula Seminar", "Lainnya..."];
 
 const handleFileChange = (e) => {
   const file = e.target.files[0];
@@ -252,7 +295,7 @@ const handleSubmit = async () => {
       namaBarang: form.value.namaBarang,
       kategori: form.value.kategori,
       warna: form.value.warna,
-      lokasi: form.value.lokasi,
+      lokasi: form.value.lokasi === "Lainnya..." ? customLokasi.value : form.value.lokasi,
       tanggal: form.value.tanggal,
       deskripsi: form.value.deskripsi,
       ciriKhusus: form.value.ciriKhusus,

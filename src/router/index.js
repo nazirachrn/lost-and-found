@@ -106,7 +106,7 @@ const router = createRouter({
 });
 
 // Guard checks
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async (to, from) => {
   const authStore = useAuthStore();
   
   // Await auth loading initialization
@@ -129,23 +129,21 @@ router.beforeEach(async (to, from, next) => {
 
   // Rule 1: Requires Auth
   if (to.matched.some(record => record.meta.requiresAuth) && !user) {
-    return next({ name: "Login", query: { redirect: to.fullPath } });
+    return { name: "Login", query: { redirect: to.fullPath } };
   }
 
   // Rule 2: Guest Only (Login/Register)
   if (to.matched.some(record => record.meta.guestOnly) && user) {
-    return next({ name: "Dashboard" });
+    return { name: "Dashboard" };
   }
 
   // Rule 3: Admin Only
   if (to.matched.some(record => record.meta.requiresAdmin)) {
     if (!user || user.role !== "admin") {
       authStore.logout(); // Fail-safe
-      return next({ name: "Login" });
+      return { name: "Login" };
     }
   }
-
-  next();
 });
 
 export default router;
