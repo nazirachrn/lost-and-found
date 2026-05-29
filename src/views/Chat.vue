@@ -179,13 +179,13 @@ const HARDCODED_ADMINS = [
     id: "admin-nazira",
     nama: "Nazira Chairani Fauza",
     role: "super_admin",
-    email: "nazira.lostlink@upi-yptk.ac.id"
+    email: "nazira.lostlink@dev.ac.id"
   },
   {
     id: "admin-damai",
     nama: "Damai Puti Afifah",
-    role: "admin",
-    email: "damai.lostlink@upi-yptk.ac.id"
+    role: "super_admin",
+    email: "damai.lostlink@dev.ac.id"
   }
 ];
 

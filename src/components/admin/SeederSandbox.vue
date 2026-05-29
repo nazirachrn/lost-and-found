@@ -68,16 +68,16 @@ const isAdminSeeding = ref(false);
 
 const ADMIN_CREDENTIALS = [
   {
-    email: "nazira.lostlink@upi-yptk.ac.id",
+    email: "nazira.lostlink@dev.ac.id",
     password: "SuperAdminLostLink2026!",
-    nama_lengkap: "Nazira Chairani Fauza (Admin)",
+    nama_lengkap: "Nazira Chairani Fauza",
     role: "super_admin"
   },
   {
-    email: "damai.lostlink@upi-yptk.ac.id",
+    email: "damai.lostlink@dev.ac.id",
     password: "SuperAdminLostLink2026!",
-    nama_lengkap: "Damai Puti Afifah (Admin)",
-    role: "admin"
+    nama_lengkap: "Damai Puti Afifah",
+    role: "super_admin"
   }
 ];
 
