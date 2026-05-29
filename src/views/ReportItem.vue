@@ -41,6 +41,15 @@
               <option value="" disabled>Pilih Kategori</option>
               <option v-for="cat in categories" :key="cat" :value="cat">{{ cat }}</option>
             </select>
+            <!-- Conditional Input Custom Kategori -->
+            <input 
+              v-if="form.kategori === 'Lainnya...'"
+              type="text"
+              v-model="customKategori"
+              required
+              placeholder="Sebutkan kategori spesifik Anda..."
+              class="text-xs rounded-xl border border-slate-200 px-3 py-2.5 mt-2 focus:border-brand-500 focus:outline-none"
+            />
           </div>
         </div>
 
@@ -250,6 +259,7 @@ const selectedFileName = ref("");
 const fileInput = ref(null);
 
 const customLokasi = ref("");
+const customKategori = ref("");
 const isMapLocked = ref(false);
 
 // Center point of university Campus
@@ -267,7 +277,7 @@ const form = ref({
   foto: ""
 });
 
-const categories = ["HP", "Laptop", "Dompet", "Tas", "Kunci", "Kartu Identitas", "Aksesoris", "Lainnya"];
+const categories = ["HP", "Laptop", "Dompet", "Tas", "Kunci", "Kartu Identitas", "Aksesoris", "Lainnya..."];
 const locations = ["Kampus Utama", "Cafe Kopi", "Perpustakaan Pusat", "Parkiran Utara", "Aula Seminar", "Lainnya..."];
 
 const handleFileChange = (e) => {
@@ -293,7 +303,7 @@ const handleSubmit = async () => {
 
     const payload = {
       namaBarang: form.value.namaBarang,
-      kategori: form.value.kategori,
+      kategori: form.value.kategori === "Lainnya..." ? customKategori.value : form.value.kategori,
       warna: form.value.warna,
       lokasi: form.value.lokasi === "Lainnya..." ? customLokasi.value : form.value.lokasi,
       tanggal: form.value.tanggal,
