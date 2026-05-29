@@ -174,6 +174,21 @@ const sending = ref(false);
 const messagesContainer = ref(null);
 const adminContacts = ref([]);
 
+const HARDCODED_ADMINS = [
+  {
+    id: "admin-nazira",
+    nama: "Nazira Chairani Fauza",
+    role: "super_admin",
+    email: "nazira.lostlink@upi-yptk.ac.id"
+  },
+  {
+    id: "admin-damai",
+    nama: "Damai Puti Afifah",
+    role: "admin",
+    email: "damai.lostlink@upi-yptk.ac.id"
+  }
+];
+
 const fetchAdmins = async () => {
   try {
     const db = getFirestore();
@@ -183,30 +198,30 @@ const fetchAdmins = async () => {
     );
     
     const querySnapshot = await getDocs(q);
-    const admins = [];
+    const fromFirestore = [];
     querySnapshot.forEach((doc) => {
       if (user.value && doc.id !== user.value.uid) {
-        admins.push({ id: doc.id, ...doc.data() });
+        fromFirestore.push({ id: doc.id, ...doc.data() });
       }
     });
-    if (admins.length === 0) {
-      admins.push({
-        id: "admin-nazira",
-        nama: "Nazira Chairani Fauza",
-        role: "super_admin",
-        email: "nazira.lostlink@upi-yptk.ac.id"
-      });
-      admins.push({
-        id: "admin-damai",
-        nama: "Damai Puti Afifah",
-        role: "admin",
-        email: "damai.lostlink@upi-yptk.ac.id"
-      });
-    }
-    
-    adminContacts.value = admins;
+
+    // Gabungkan: mulai dari hardcoded, update data jika ada di Firestore
+    const merged = HARDCODED_ADMINS.map(hardcoded => {
+      const fromDb = fromFirestore.find(a => a.email === hardcoded.email);
+      return fromDb ? { ...hardcoded, ...fromDb } : hardcoded;
+    });
+
+    // Tambahkan admin dari Firestore yang tidak ada di hardcoded list
+    fromFirestore.forEach(a => {
+      const alreadyIncluded = merged.find(m => m.email === a.email);
+      if (!alreadyIncluded) merged.push(a);
+    });
+
+    adminContacts.value = merged;
   } catch (error) {
     console.error("Gagal mengambil kontak admin:", error);
+    // Gunakan hardcoded sebagai fallback jika Firestore error
+    adminContacts.value = HARDCODED_ADMINS;
   }
 };
 
