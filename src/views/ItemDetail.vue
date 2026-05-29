@@ -104,6 +104,10 @@
             :readonly="true"
             height="280px"
           />
+          <div class="flex bg-slate-50 rounded-xl p-3 justify-between items-center text-[10px] text-slate-500 border border-slate-100">
+            <span>Lat: <strong class="font-mono text-slate-700">{{ (item.latitude || -6.2088).toFixed(6) }}</strong></span>
+            <span>Lng: <strong class="font-mono text-slate-700">{{ (item.longitude || 106.8456).toFixed(6) }}</strong></span>
+          </div>
         </div>
       </div>
 
@@ -245,11 +249,23 @@ const claimModalOpen = ref(false);
 const user = computed(() => authStore.currentUser);
 
 let unsubItems = null;
+const reporterProfile = ref(null);
+
 onMounted(async () => {
   unsubItems = itemsStore.initializeItems();
   try {
     const col = type.value === 'missing' ? 'missing_items' : 'found_items';
-    item.value = await databaseService.getDoc(col, itemId.value);
+    const docData = await databaseService.getDoc(col, itemId.value);
+    item.value = docData;
+    
+    // Fetch reporter profile from Firestore
+    if (docData && docData.userId) {
+      try {
+        reporterProfile.value = await databaseService.getDoc('users', docData.userId);
+      } catch (err) {
+        reporterProfile.value = { nama: 'Pengguna LostLink', photoURL: `https://api.dicebear.com/7.x/adventurer/svg?seed=user` };
+      }
+    }
   } catch (e) {
     item.value = null;
   } finally {
@@ -279,17 +295,11 @@ const potentialMatches = computed(() => {
 });
 
 const reporterName = computed(() => {
-  if (!item.value) return 'Pengguna';
-  const users = JSON.parse(localStorage.getItem('ll_users') || '[]');
-  const reporter = users.find(u => u.uid === item.value.userId);
-  return reporter ? reporter.nama : 'Pengguna LostLink';
+  return reporterProfile.value?.nama || 'Pengguna LostLink';
 });
 
 const reporterAvatar = computed(() => {
-  if (!item.value) return '';
-  const users = JSON.parse(localStorage.getItem('ll_users') || '[]');
-  const reporter = users.find(u => u.uid === item.value.userId);
-  return reporter ? reporter.photoURL : `https://api.dicebear.com/7.x/adventurer/svg?seed=user`;
+  return reporterProfile.value?.photoURL || `https://api.dicebear.com/7.x/adventurer/svg?seed=user`;
 });
 
 const statusLabel = computed(() => {

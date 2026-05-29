@@ -30,6 +30,14 @@
             </span>
           </div>
         </div>
+        
+        <!-- Edit Profile Button -->
+        <div class="sm:ml-auto mt-2 sm:mt-14 flex-shrink-0">
+          <button @click="openEditProfile" class="px-4 py-2 bg-white text-slate-700 border border-slate-200 rounded-xl text-xs font-bold shadow-sm hover:bg-slate-50 hover:text-brand-600 hover:border-brand-200 flex items-center gap-2 transition-colors">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+            Edit Profil
+          </button>
+        </div>
       </div>
     </div>
 
@@ -155,6 +163,48 @@
         </div>
       </div>
     </div>
+
+    <!-- Edit Profile Modal -->
+    <div v-if="editProfile.show" class="fixed inset-0 z-50 bg-slate-950/40 backdrop-blur-xs flex items-center justify-center p-4">
+      <div class="bg-white w-full max-w-sm rounded-2xl shadow-xl p-6 flex flex-col gap-5 border border-slate-100">
+        <div class="flex items-center justify-between border-b border-slate-50 pb-3">
+          <h3 class="text-sm font-extrabold text-slate-800 uppercase tracking-wider">Edit Profil</h3>
+          <button @click="editProfile.show = false" class="text-slate-400 hover:text-slate-600">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+        
+        <form @submit.prevent="saveProfile" class="flex flex-col gap-4">
+          <div class="flex flex-col gap-1.5">
+            <label class="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">Nama Lengkap</label>
+            <input 
+              type="text" 
+              v-model="editProfile.nama" 
+              required 
+              class="text-xs rounded-xl border border-slate-200 px-3 py-2.5 focus:border-brand-500 focus:outline-none"
+            />
+          </div>
+          
+          <div class="flex flex-col gap-1.5">
+            <label class="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">Email (Hanya Baca)</label>
+            <input 
+              type="text" 
+              :value="user?.email" 
+              disabled
+              class="text-xs rounded-xl border border-slate-100 bg-slate-50 px-3 py-2.5 text-slate-400"
+            />
+          </div>
+
+          <div class="flex gap-2 mt-2 pt-4 border-t border-slate-50">
+            <button type="button" @click="editProfile.show = false" class="flex-1 py-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-500 hover:bg-slate-50">Batal</button>
+            <button type="submit" :disabled="editProfile.saving" class="flex-1 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold transition-colors flex justify-center items-center gap-2">
+              <span v-if="editProfile.saving" class="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+              Simpan
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -174,6 +224,7 @@ const user = computed(() => authStore.currentUser);
 const activeTab = ref('missing');
 
 const deleteConfirm = ref({ show: false, id: null, type: null });
+const editProfile = ref({ show: false, nama: '', saving: false });
 
 let unsubItems = null;
 onMounted(() => { unsubItems = itemsStore.initializeItems(); });
@@ -224,6 +275,55 @@ const doDelete = async () => {
     notifStore.showToast('Gagal menghapus laporan.', 'error');
   } finally {
     deleteConfirm.value = { show: false, id: null, type: null };
+  }
+};
+
+import { databaseService } from '../firebase/databaseService';
+
+const openEditProfile = () => {
+  editProfile.value.nama = user.value.nama;
+  editProfile.value.show = true;
+};
+
+const saveProfile = async () => {
+  if (!editProfile.value.nama.trim()) return;
+  editProfile.value.saving = true;
+  
+  try {
+    const newName = editProfile.value.nama.trim();
+    // Auto update avatar based on new name
+    const newPhotoURL = `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(newName)}`;
+    
+    // Update firestore document
+    await databaseService.updateDoc("users", user.value.uid, {
+      nama: newName,
+      displayName: newName,
+      photoURL: newPhotoURL
+    });
+    
+    // Update local state directly for instant feedback
+    if (authStore.currentUser) {
+      authStore.currentUser.nama = newName;
+      authStore.currentUser.displayName = newName;
+      authStore.currentUser.photoURL = newPhotoURL;
+      
+      // Update local storage demo session if it exists
+      const session = localStorage.getItem("ll_active_session");
+      if (session) {
+        const parsed = JSON.parse(session);
+        parsed.nama = newName;
+        parsed.displayName = newName;
+        parsed.photoURL = newPhotoURL;
+        localStorage.setItem("ll_active_session", JSON.stringify(parsed));
+      }
+    }
+    
+    notifStore.showToast('Profil berhasil diperbarui.', 'success');
+    editProfile.value.show = false;
+  } catch (err) {
+    notifStore.showToast('Gagal memperbarui profil: ' + err.message, 'error');
+  } finally {
+    editProfile.value.saving = false;
   }
 };
 
