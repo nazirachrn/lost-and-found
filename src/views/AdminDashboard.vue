@@ -82,15 +82,23 @@
                 <td class="px-5 py-3.5 text-slate-500">{{ item.kategori }}</td>
                 <td class="px-5 py-3.5 text-slate-500">{{ item.lokasi }}</td>
                 <td class="px-5 py-3.5">
-                  <span 
-                    class="text-[9px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full"
+                  <select 
+                    v-model="item.status"
+                    @change="adminChangeStatus(item, $event.target.value)"
+                    class="text-[10px] font-extrabold uppercase tracking-wider px-2 py-1 rounded-lg border outline-none cursor-pointer"
                     :class="{
-                      'bg-rose-100 text-rose-700': item.status === 'missing',
-                      'bg-sky-100 text-sky-700': item.status === 'found',
-                      'bg-amber-100 text-amber-700': item.status === 'matching',
-                      'bg-emerald-100 text-emerald-700': item.status === 'verified' || item.status === 'returned',
+                      'bg-rose-100 text-rose-700 border-rose-200': item.status === 'missing',
+                      'bg-sky-100 text-sky-700 border-sky-200': item.status === 'found',
+                      'bg-amber-100 text-amber-700 border-amber-200': item.status === 'matching',
+                      'bg-emerald-100 text-emerald-700 border-emerald-200': item.status === 'verified' || item.status === 'returned',
                     }"
-                  >{{ item.status }}</span>
+                  >
+                    <option value="missing">MISSING</option>
+                    <option value="found">FOUND</option>
+                    <option value="matching">MATCHING</option>
+                    <option value="verified">VERIFIED</option>
+                    <option value="returned">RETURNED</option>
+                  </select>
                 </td>
                 <td class="px-5 py-3.5">
                   <button 
@@ -164,6 +172,7 @@ import { databaseService } from '../firebase/databaseService';
 import SeederSandbox from '../components/admin/SeederSandbox.vue';
 
 const itemsStore = useItemsStore();
+const notifStore = useNotificationsStore();
 const activeTab = ref('reports');
 const reportSubTab = ref('missing');
 const processingId = ref(null);
@@ -176,10 +185,14 @@ const adminTabs = computed(() => [
 
 let unsubItems = null;
 
-onMounted(() => {
+onMounted(async () => {
   unsubItems = itemsStore.initializeItems();
-  // Load users
-  allUsers.value = JSON.parse(localStorage.getItem('ll_users') || '[]');
+  // Load users from Firestore
+  try {
+    allUsers.value = await databaseService.getDocs('users');
+  } catch (err) {
+    console.error("Gagal memuat pengguna:", err);
+  }
 });
 
 onUnmounted(() => {
@@ -221,11 +234,49 @@ const adminDeleteItem = async (id, type) => {
   }
 };
 
-const blockUser = (uid) => {
-  const users = JSON.parse(localStorage.getItem('ll_users') || '[]');
-  const updated = users.filter(u => u.uid !== uid);
-  localStorage.setItem('ll_users', JSON.stringify(updated));
-  allUsers.value = updated;
-  notifStore.showToast('Pengguna berhasil diblokir dari sistem.', 'info');
+const adminChangeStatus = async (item, newStatus) => {
+  const collectionName = reportSubTab.value === 'missing' ? 'missing_items' : 'found_items';
+  try {
+    await databaseService.updateDoc(collectionName, item.id, { status: newStatus });
+    item.status = newStatus;
+    notifStore.showToast(`Status laporan berhasil diubah ke ${newStatus}`, 'success');
+
+    // Jika barang milik user (missing) diubah menjadi "found" atau "returned", kirim notifikasi email
+    if (collectionName === 'missing_items' && (newStatus === 'found' || newStatus === 'returned')) {
+      const user = allUsers.value.find(u => u.uid === item.userId);
+      if (user && user.email) {
+        await databaseService.addDoc("mail", {
+          to: user.email,
+          message: {
+            subject: `Pembaruan Laporan: Barang Anda Ditemukan!`,
+            html: `
+              <h2>Halo, ${user.nama}!</h2>
+              <p>Ada kabar baik mengenai laporan barang hilang Anda.</p>
+              <p>Barang: <strong>${item.namaBarang}</strong></p>
+              <p>Status laporan ini telah diubah menjadi: <strong style="color: green;">${newStatus.toUpperCase()}</strong></p>
+              <p>Silakan periksa dashboard akun Anda di LostLink untuk detail lebih lanjut dan langkah selanjutnya.</p>
+              <br/>
+              <p>Salam,</p>
+              <p>Tim Admin LostLink</p>
+            `
+          }
+        });
+        notifStore.showToast(`Email notifikasi terkirim ke ${user.email}`, 'success');
+      }
+    }
+  } catch (e) {
+    notifStore.showToast('Gagal mengubah status', 'error');
+  }
+};
+
+const blockUser = async (uid) => {
+  try {
+    // Sebagai fallback sederhana: menghapus dari firestore atau mengubah role
+    await databaseService.deleteDoc('users', uid);
+    allUsers.value = allUsers.value.filter(u => u.uid !== uid);
+    notifStore.showToast('Pengguna berhasil diblokir dari sistem.', 'info');
+  } catch (e) {
+    notifStore.showToast('Gagal memblokir pengguna', 'error');
+  }
 };
 </script>

@@ -189,6 +189,20 @@ const fetchAdmins = async () => {
         admins.push({ id: doc.id, ...doc.data() });
       }
     });
+    if (admins.length === 0) {
+      admins.push({
+        id: "admin-nazira",
+        nama: "Nazira Chairani Fauza",
+        role: "super_admin",
+        email: "nazira.lostlink@upi-yptk.ac.id"
+      });
+      admins.push({
+        id: "admin-damai",
+        nama: "Damai Puti Afifah",
+        role: "admin",
+        email: "damai.lostlink@upi-yptk.ac.id"
+      });
+    }
     
     adminContacts.value = admins;
   } catch (error) {
