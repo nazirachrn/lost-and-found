@@ -1,88 +1,122 @@
 <div align="center">
-  
-  <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Magnifying%20Glass%20Tilted%20Right.png" alt="Magnifying Glass" width="80" height="80" />
-  <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Teddy%20Bear.png" alt="Teddy Bear" width="80" height="80" />
-
-  <h1 style="color: #FF69B4; font-family: sans-serif;">🎀 <b>Lost & Found</b> 🎀</h1>
-  <p style="color: #FF82AB; font-size: 1.2em; font-family: sans-serif;">
-    <b>Sistem pelacakan barang hilang & ditemukan yang paling menggemaskan! ✨</b>
+  <h1>Lost & Found Management System</h1>
+  <p>
+    Sistem Informasi Pelacakan dan Pelaporan Barang Hilang & Ditemukan
   </p>
   <p>
-    <img src="https://img.shields.io/badge/Vue%203-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white" alt="Vue" />
-    <img src="https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" />
-    <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind" />
-    <img src="https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black" alt="Firebase" />
+    <img src="https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vue.js&logoColor=4FC08D" alt="Vue 3" />
+    <img src="https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E" alt="Vite" />
+    <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
+    <img src="https://img.shields.io/badge/Firebase-039BE5?style=for-the-badge&logo=Firebase&logoColor=white" alt="Firebase" />
   </p>
 </div>
 
-<hr style="border: 2px dashed #FFB6C1; margin: 20px 0;">
+---
 
-<h2 style="color: #FF1493; font-family: sans-serif;">🌟 <b>Tentang Proyek Ini</b></h2>
-<p style="color: #4A4A4A; line-height: 1.6; font-family: sans-serif;">
-  Pernah kehilangan barang kesayanganmu? Atau mungkin menemukan barang milik orang lain dan bingung harus mengembalikannya ke mana? 
-  <b>Lost & Found</b> hadir untuk membantumu! 💖 Aplikasi web ini dibuat dengan desain yang <i>super cute</i> untuk memudahkan pelaporan dan pencarian barang secara cepat, aman, dan tentunya menyenangkan! 🌷
-</p>
+## Tentang Proyek
 
-<h2 style="color: #9370DB; font-family: sans-serif;">✨ <b>Fitur Utama yang Menggemaskan</b></h2>
-<ul style="font-family: sans-serif;">
-  <li style="margin-bottom: 8px;">🔍 <b style="color: #FF82AB;">Cari Barang Hilang:</b> Lihat daftar barang yang baru-baru ini ditemukan dengan mudah.</li>
-  <li style="margin-bottom: 8px;">📣 <b style="color: #FFA07A;">Lapor Penemuan:</b> Jadilah pahlawan dengan melaporkan barang yang kamu temukan!</li>
-  <li style="margin-bottom: 8px;">🗺️ <b style="color: #20B2AA;">Peta Interaktif:</b> Lihat lokasi hilangnya atau ditemukannya barang secara interaktif dengan Leaflet.</li>
-  <li style="margin-bottom: 8px;">🔒 <b style="color: #87CEFA;">Aman & Nyaman:</b> Autentikasi super aman yang didukung oleh Firebase.</li>
-</ul>
+**Lost & Found Management System** adalah aplikasi web komprehensif yang dirancang untuk memfasilitasi pelaporan barang hilang dan pendataan barang yang ditemukan. Platform ini menyederhanakan proses mempertemukan kembali pemilik dengan barang mereka melalui antarmuka yang intuitif, pemetaan interaktif, serta sistem autentikasi pengguna yang aman dan terpusat.
 
-<h2 style="color: #FF8C00; font-family: sans-serif;">🛠️ <b>Teknologi yang Digunakan</b></h2>
-<table align="center" style="width: 100%; text-align: left; border-collapse: collapse; font-family: sans-serif; border: 2px solid #FFB6C1;">
-  <tr style="background-color: #FFF0F5;">
-    <th style="padding: 12px; border: 1px solid #FFB6C1; color: #FF69B4;">Kategori</th>
-    <th style="padding: 12px; border: 1px solid #FFB6C1; color: #FF69B4;">Teknologi</th>
-  </tr>
-  <tr>
-    <td style="padding: 12px; border: 1px solid #FFB6C1; color: #4A4A4A;">🌸 <b>Frontend</b></td>
-    <td style="padding: 12px; border: 1px solid #FFB6C1; color: #4A4A4A;">Vue 3, Vite, Tailwind CSS, Pinia</td>
-  </tr>
-  <tr style="background-color: #F8F8FF;">
-    <td style="padding: 12px; border: 1px solid #FFB6C1; color: #4A4A4A;">☁️ <b>Backend & Auth</b></td>
-    <td style="padding: 12px; border: 1px solid #FFB6C1; color: #4A4A4A;">Firebase (Firestore & Authentication)</td>
-  </tr>
-  <tr>
-    <td style="padding: 12px; border: 1px solid #FFB6C1; color: #4A4A4A;">🗺️ <b>Peta & Ikon</b></td>
-    <td style="padding: 12px; border: 1px solid #FFB6C1; color: #4A4A4A;">Leaflet, Lucide Vue Next</td>
-  </tr>
-</table>
+## Fitur Utama
 
-<h2 style="color: #32CD32; font-family: sans-serif;">🚀 <b>Cara Menjalankan (Instalasi)</b></h2>
-<p style="color: #4A4A4A; font-family: sans-serif;">Ikuti langkah-langkah mudah ini untuk bermain dengan proyek ini di komputermu:</p>
+- **Sistem Pelaporan Terpadu:** Alur kerja terpisah dan terstruktur untuk melaporkan barang hilang dan barang yang ditemukan.
+- **Visualisasi Peta Interaktif:** Integrasi peta menggunakan Leaflet untuk menentukan titik koordinat lokasi yang presisi.
+- **Autentikasi Aman:** Sistem registrasi, login, dan proteksi rute halaman yang didukung oleh Firebase Authentication.
+- **Database Real-time:** Sinkronisasi data yang cepat, handal, dan efisien menggunakan layanan Cloud Firestore.
+- **Desain Responsif:** Tata letak yang dioptimalkan untuk berbagai ukuran layar (desktop, tablet, dan perangkat seluler) menggunakan Tailwind CSS.
+- **Dasbor Admin:** Tampilan manajemen terpusat bagi administrator untuk memantau, memverifikasi, dan mengelola seluruh data pada platform.
 
-<ol style="color: #4A4A4A; line-height: 1.8; font-family: sans-serif;">
-  <li>
-    <b>Clone repositori ini:</b>
-    <pre style="background-color: #FFF0F5; color: #D14; padding: 12px; border-radius: 8px; border: 1px dashed #FFB6C1;"><code>git clone https://github.com/username/lost-and-found.git</code></pre>
-  </li>
-  <li>
-    <b>Masuk ke direktori:</b>
-    <pre style="background-color: #FFF0F5; color: #D14; padding: 12px; border-radius: 8px; border: 1px dashed #FFB6C1;"><code>cd lost-and-found</code></pre>
-  </li>
-  <li>
-    <b>Install dependencies (paket):</b>
-    <pre style="background-color: #FFF0F5; color: #D14; padding: 12px; border-radius: 8px; border: 1px dashed #FFB6C1;"><code>npm install</code></pre>
-  </li>
-  <li>
-    <b>Jalankan server pengembangan:</b>
-    <pre style="background-color: #FFF0F5; color: #D14; padding: 12px; border-radius: 8px; border: 1px dashed #FFB6C1;"><code>npm run dev</code></pre>
-  </li>
-</ol>
+## Stack Teknologi
 
-<p style="color: #4A4A4A; font-family: sans-serif;">Lalu buka <code>http://localhost:5173</code> di browsermu dan nikmati keindahannya! 🌈</p>
+### Frontend
+- **Framework:** Vue 3 (Composition API)
+- **Build Tool:** Vite
+- **State Management:** Pinia
+- **Routing:** Vue Router
+- **Styling:** Tailwind CSS
+- **Icons:** Lucide Vue Next
+- **Maps:** Leaflet
 
-<h2 style="color: #BA55D3; font-family: sans-serif;">💖 <b>Kontribusi</b></h2>
-<p style="color: #4A4A4A; font-family: sans-serif;">
-  Mau ikutan bikin aplikasi ini makin lucu dan fungsional? Boleh banget! Silakan buat <i>Pull Request</i> atau buka <i>Issue</i> baru. Semua ide sangat diterima dengan tangan terbuka! 🤗
-</p>
+### Backend & Layanan
+- **Autentikasi:** Firebase Authentication
+- **Database:** Cloud Firestore
+- **Penyimpanan:** Firebase Storage
 
-<br>
+## Prasyarat
+
+Sebelum memulai proses instalasi, pastikan Anda telah memenuhi persyaratan sistem minimal berikut:
+- Node.js (versi 18.0.0 atau lebih baru)
+- Paket manajer (npm atau yarn)
+- Proyek Firebase yang telah dikonfigurasi dengan layanan Auth, Firestore, dan Storage.
+
+## Instalasi dan Pengaturan
+
+1. **Kloning repositori:**
+   ```bash
+   git clone https://github.com/username/lost-and-found.git
+   cd lost-and-found
+   ```
+
+2. **Instalasi dependensi:**
+   ```bash
+   npm install
+   ```
+
+3. **Konfigurasi Variabel Lingkungan:**
+   - Buat file `.env` pada direktori utama proyek (root).
+   - Tambahkan kredensial proyek Firebase Anda sesuai dengan format berikut:
+     ```env
+     VITE_FIREBASE_API_KEY=your_api_key
+     VITE_FIREBASE_AUTH_DOMAIN=your_project_id.firebaseapp.com
+     VITE_FIREBASE_PROJECT_ID=your_project_id
+     VITE_FIREBASE_STORAGE_BUCKET=your_project_id.appspot.com
+     VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+     VITE_FIREBASE_APP_ID=your_app_id
+     ```
+
+4. **Menjalankan server pengembangan:**
+   ```bash
+   npm run dev
+   ```
+   Aplikasi akan mulai berjalan dan dapat diakses melalui browser pada `http://localhost:5173`.
+
+## Struktur Proyek
+
+```text
+lost-and-found/
+├── src/
+│   ├── assets/       # Aset statis seperti gambar dan stylesheet global
+│   ├── components/   # Komponen Vue yang dapat digunakan ulang (reusable)
+│   ├── firebase/     # Konfigurasi layanan Firebase
+│   ├── router/       # Konfigurasi perutean aplikasi (Vue Router)
+│   ├── stores/       # Modul manajemen state (Pinia)
+│   ├── views/        # Komponen level halaman (mis: AdminDashboard, Home)
+│   ├── App.vue       # Komponen utama (root component)
+│   └── main.js       # Titik masuk utama aplikasi (entry point)
+├── public/           # File statis publik (termasuk favicon)
+├── .env              # Konfigurasi variabel lingkungan (environment variables)
+├── index.html        # Template HTML utama
+├── package.json      # Metadata proyek dan daftar dependensi
+├── tailwind.config.js# File konfigurasi utilitas Tailwind CSS
+└── vite.config.js    # File konfigurasi Vite
+```
+
+## Kontribusi
+
+Kami menyambut baik berbagai bentuk kontribusi untuk meningkatkan performa dan fitur dari proyek ini. Untuk berkontribusi, ikuti langkah-langkah berikut:
+
+1. Lakukan *Fork* pada repositori ini.
+2. Buat *branch* fitur Anda (`git checkout -b fitur/FiturBaru`).
+3. Lakukan *Commit* pada setiap perubahan Anda (`git commit -m 'Menambahkan FiturBaru'`).
+4. *Push* ke *branch* tersebut (`git push origin fitur/FiturBaru`).
+5. Ajukan *Pull Request* untuk kami tinjau.
+
+## Lisensi
+
+Proyek ini didistribusikan di bawah Lisensi MIT.
+
+---
 
 <div align="center">
-  <p style="color: #FF69B4; font-size: 1.2em; font-family: sans-serif;"><b>Dibuat dengan ✨ keajaiban ✨ dan ❤️</b></p>
-  <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Sparkling%20Heart.png" alt="Sparkling Heart" width="50" height="50" />
+  <p>Dikembangkan dengan standar pengembangan web modern.</p>
 </div>
