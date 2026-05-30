@@ -2,13 +2,13 @@ import { initializeApp, getApps } from "firebase/app";
 import { getAnalytics, isSupported } from "firebase/analytics";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAUlC00m9xDoqqKhvePk2ffQ-GJA2xjJos",
-  authDomain: "lostlink-35a35.firebaseapp.com",
-  projectId: "lostlink-35a35",
-  storageBucket: "lostlink-35a35.firebasestorage.app",
-  messagingSenderId: "912217821587",
-  appId: "1:912217821587:web:da7a5ef68b7038e5ffd866",
-  measurementId: "G-S96SEJXRCK"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
 // Force demo mode to false since we are using real credentials
