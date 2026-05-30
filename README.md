@@ -53,7 +53,7 @@ Sebelum memulai proses instalasi, pastikan Anda telah memenuhi persyaratan siste
 
 1. **Kloning repositori:**
    ```bash
-   git clone https://github.com/username/lost-and-found.git
+   git clone https://github.com/nazirachrn/lost-and-found.git
    cd lost-and-found
    ```
 
